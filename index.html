@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tommy Studios — Crew Availability</title>
+<style>
+@import url('https://fonts.cdnfonts.com/css/futura-lt-pro');
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Futura LT Pro','Futura','Century Gothic',sans-serif;background:#2a2a2e;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px}
+.card{background:#fff;max-width:500px;width:100%;overflow:hidden}
+.hdr{background:#1e2330;padding:28px 28px 22px;color:#fff;position:relative}
+.hdr::after{content:'';position:absolute;bottom:0;left:28px;right:28px;height:2px;background:#1a2744}
+.brand{display:flex;align-items:center;margin-bottom:16px}
+.brand img{height:28px;width:auto;margin-right:10px}
+.brand-name{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#999}
+.hdr h1{font-size:22px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:2px}
+.hdr p{font-size:11px;color:#999;letter-spacing:.5px}
+.prog{display:flex;padding:16px 28px 0;gap:8px}
+.prog div{flex:1}.prog .bar{height:2px;background:#e0e0e0;transition:.3s}.prog .bar.on{background:#1a2744}
+.prog label{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#bbb;margin-top:4px;display:block}.prog label.on{color:#1a2744;font-weight:700}
+.bd{padding:20px 28px 28px}
+.step{display:none}.step.active{display:block}
+.fl{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#1e2330;margin-bottom:8px;display:block}
+input[type=text]{width:100%;padding:12px 14px;border:1.5px solid #ddd;font-family:inherit;font-size:14px;outline:none;transition:.2s;background:#fafafa}
+input[type=text]:focus{border-color:#1a2744;background:#fff}
+input[type=text]::placeholder{color:#bbb;font-size:13px}
+.res{max-height:260px;overflow-y:auto;margin-top:6px}
+.res button{display:block;width:100%;text-align:left;padding:10px 14px;margin:2px 0;border:1.5px solid #eee;background:#fff;cursor:pointer;transition:.15s;font-family:inherit}
+.res button:hover{border-color:#999}.res button.sel{border-color:#1a2744;background:#f7f7f7}
+.res .nm{font-weight:700;font-size:13px;color:#1e2330;letter-spacing:.5px;text-transform:uppercase}
+.res .rl{font-size:10px;color:#888;margin-top:2px;letter-spacing:.3px}
+.nm-err{color:#c8102e;font-size:11px;margin-top:8px;display:none}.nm-err.show{display:block}
+.btn{width:100%;padding:13px;border:none;font-family:inherit;font-weight:700;font-size:13px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:.2s;margin-top:16px}
+.btn-d{background:#1e2330;color:#fff}.btn-d:disabled{background:#ddd;color:#aaa;cursor:default}
+.btn-r{background:#c8102e;color:#fff}
+.btn-o{background:#fff;color:#1e2330;border:1.5px solid #1e2330}
+.btn-row{display:flex;gap:10px}.btn-row .btn{flex:1}
+.sb{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid #eee}
+.sb .name{font-weight:700;font-size:14px;letter-spacing:.5px;text-transform:uppercase;color:#1e2330}
+.sb .tid{font-size:10px;color:#888;margin-left:6px;letter-spacing:1px}
+.sb a{font-size:10px;color:#888;cursor:pointer;text-decoration:underline;letter-spacing:1px;text-transform:uppercase}
+.mr{display:flex;gap:6px;margin-bottom:12px}
+.mr select{flex:1;padding:10px;border:1.5px solid #ddd;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:.5px;background:#fafafa}
+.mn{font-size:10px;color:#888;margin-bottom:14px;letter-spacing:.3px;line-height:1.5;border-left:2px solid #c8102e;padding-left:10px}
+.qr{display:flex;gap:6px;margin-bottom:10px}
+.qr button{font-family:inherit;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:6px 12px;border:1px solid #ddd;background:#fafafa;cursor:pointer;color:#333;transition:.15s}
+.qr button:hover{border-color:#999}
+.cal{border:1.5px solid #ddd;overflow:hidden;margin-bottom:8px}
+.cal-h{display:grid;grid-template-columns:repeat(7,1fr);background:#1e2330}
+.cal-h span{padding:8px 0;text-align:center;font-size:10px;font-weight:700;letter-spacing:1px;color:#fff}
+.cal-h span.we{color:#555}
+.cal-g{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:#e0e0e0}
+.cal-g button{background:#fff;border:none;padding:12px 2px;font-family:inherit;font-size:14px;font-weight:500;cursor:pointer;position:relative;transition:.1s;color:#1e2330}
+.cal-g button.empty{background:#f2f2f2;cursor:default}
+.cal-g button.we{background:#f2f2f2;color:#ccc;cursor:default}
+.cal-g button.on{background:#e6f4ea;color:#1a7a3a;font-weight:700}
+.cal-g button.on::after{content:'';position:absolute;bottom:3px;left:50%;transform:translateX(-50%);width:4px;height:4px;background:#1a7a3a}
+.ct{font-size:11px;color:#888;margin:6px 0;letter-spacing:.3px}.ct strong{color:#1e2330;font-weight:700}
+.ni{margin-top:4px}.ni input{font-size:12px;padding:10px 12px}
+.cb{background:#fafafa;border:1px solid #eee;padding:18px;margin-bottom:18px;word-break:break-word;overflow-wrap:break-word}
+.cg{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cl{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#888;margin-bottom:2px}
+.cv{font-size:14px;font-weight:700;color:#1e2330;letter-spacing:.3px}
+.cv2{font-size:12px;color:#333}
+.chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px;padding-top:12px;border-top:1px solid #eee}
+.chips span{padding:3px 8px;font-size:11px;font-weight:700;letter-spacing:.5px;background:#e6f4ea;color:#1a7a3a}
+.cn{margin-top:8px;font-size:11px;color:#888;font-style:italic}
+.done{text-align:center}
+.dc{width:56px;height:56px;background:#e6f4ea;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:28px;color:#1a7a3a}
+.done h2{font-size:18px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
+.done p{color:#888;font-size:12px;margin-bottom:18px}
+.err{color:#c8102e;font-size:11px;margin-top:8px;display:none}.err.show{display:block}
+.ftr{background:#1e2330;padding:10px 28px;display:flex;align-items:center;justify-content:center}
+.ftr span{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#555}
+.days-list{font-size:13px;margin-top:6px;line-height:1.8;word-break:break-all}
+@media(max-width:480px){.bd{padding:16px 20px 22px}.hdr{padding:20px 20px 16px}.prog{padding:12px 20px 0}}
+</style>
+</head>
+<body>
+<div class="card">
+<div class="hdr">
+<div class="brand"><img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCACqAQIDASIAAhEBAxEB/8QAHAABAAICAwEAAAAAAAAAAAAAAAgJBgcCBAUD/8QAQRAAAQEEAgwMBgEEAwAAAAAAAAIBAwQGB9MFCBYYN1RVVnWUldEREhUzUnGRk6Oys9ITITVzdLFBFCIxUSUyYf/EABwBAQACAgMBAAAAAAAAAAAAAAAEBQMGAQIHCP/EADgRAAEBBAUICAYDAQAAAAAAAAABAgMEFBMVUWGRBRESUlNioeEGMTIzVHKS0TQ1QYGxwSEjQnH/2gAMAwEAAhEDEQA/AJlgx+krBzM2iIv0VFVz3nFdZOhIKZRV0s2YwPn1Hm/gtxBUYCZVG/w5mGcuLcwVGAVRv8OYnLi3MFRgFUb/AA5icuLcwVGAVRv8OYnLi3MFRgFUb/DmJy4tzBUYBVG/w5icuLcwVGAVRv8ADmJy4tzBUYBVG/w5icuLcwVGAVRv8OYnLi3MFRgFUb/DmJy4tzBUYBVG/wAOYnLi3MFRgFUb/DmJy4tzBUYBVG/w5icuLcwVGAVRv8OYnLi3MFRhPi0TwHq0s/8AI7I0VAUDGnpZ/tzMjqIpGs2Y32ACuJJj9JWDmZtERfoqKrnvOK6y1GkrBzM2iIv0VFVz3nFdZeZI7LRBi+tDiAC3IYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJ8WieA9Wln/AJHZAcnxaJ4D1aWf+R2V2VO4+5Jhe2b7ABrpYmP0lYOZm0RF+ioque84rrLU6RXbx9R9Mbly7W8eLsVFJQhCWqUprXSmMYxjP8t/8Kznkhz21amskaaWsa3I8R7C6yU0iMtZ1IUUyqqmYxsGRXBT5mLNOx4j2C4KfMxZp2PEewt6Ri0i6DVhjoMiuCnzMWadjxHsFwU+ZizTseI9gpGLRoNWGOgyK4KfMxZp2PEewXBT5mLNOx4j2CkYtGg1YY6DIrgp8zFmnY8R7BcFPmYs07HiPYKRi0aDVhjoMiuCnzMWadjxHsFwU+ZizTseI9gpGLRoNWGOgyK4KfMxZp2PEewXBT5mLNOx4j2CkYtGg1YY6DIrgp8zFmnY8R7BcFPmYs07HiPYKRi0aDVhjoO5EWKspDv3kPEWMjXL50pqHjt44UlSFMbwNS1jWcLGsb8msacOT4/EonulbjilY1kMqQkQv+FwU6wOzyfH4lE90rcOT4/EonulbhSsayHMnEbNcFOsDs8nx+JRPdK3Dk+PxKJ7pW4UrGsgk4jZrgp1gdnk+PxKJ7pW4cnx+JRPdK3ClY1kEnEbNcFOsDs8nx+JRPdK3Dk+PxKJ7pW4UrGsgk4jZrgp1gdnk+PxKJ7pW4cnx+JRPdK3ClY1kEnEbNcFOsDs8nx+JRPdK3Dk+PxKJ7pW4UrGsgk4jZrgp1ifFongPVpZ/wCR2QQ/oI7EonulbieVoy6euaElIfO1u1cqv28CktY3/o7K/KTbLTnMi/UzOId67aztsqiXopvgAGvks69k/psT9lf6afR0hHw0/wBrP8M/g+dk/p0T9lf6afZ1zSepgA4iOizsHER0WdhyABx4iOizsHER0WdhyABx4iOizsHER0WdhyABx4iOizsHER0WdhyABx4iOizsHER0WdhyABx4iOizsHER0WdhyABx4iOizsDUI6LOw5BoBAClPCdNWmoz11mNmSUqYTpq01GeusxsqWutT6MgkSWd+VPwAAdSVmQAADMgAAGZAAAMyAAAZkAAAzICY1qX8qJ2fnvfKghyTGtS8E7Pz3vlQSIbvDTOnXyxPMn7NugAsDxw69k/p0T9lf6afZ1zSeph8bJ/Ton7K/00+zrmk9TADkAAAAAAAAAAAAAAAAAAGgNAIAUqYTpq01GeusxsySlTCdNWmoz11mNlQ11qfRsF8M78qfgAA4JIAAAAAAAAAAAAAAAJjWpeCdn573yoIckxrUvBOz8975UGeG7w0zp38sTzJ+zboALE8cOvZP6dE/ZX+mn2dc0nqYfGyf06J+yv9NPs65pPUwA5AAAAAAAAAAAAAAAAAABoDQCAFKmE6atNRnrrMbMkpUwnTVpqM9dZjZUNdan0bBfDO/Kn4AAOCSAAAAAAAAAAAAAAACY1qXgnZ+e98qCHJMa1LwTs/Pe+VBnhu8NM6d/LE8yfs26ACxPHDr2T+nRP2V/pp9nXNJ6mHxsn9Oifsr/TT7OuaT1MAOQAAAAAAAAAAAAAAAAAAaA0AgBSphOmrTUZ66zGzJKVMJ01aajPXWY2VDXWp9GwXwzvyp+AADgkgAAAAAAAAAAAAAAAmNal4J2fnvfKghyTGtS8E7Pz3vlQZ4bvDTOnfyxPMn7NugAsTxw69k/p0T9lf6afZ1zSeph05hinEDYCyMbFL+G4h4V69er4Gt4qUoa1reBnzb8mfwarTbL0LJSxLZwWxrGcDf8AioyqMjDptvsoqnVWkTrU3EDT18zQrngvZUZVC+ZoVzwXsqMqjvLPtRcFOKRi03CDT18zQrngvZUZVC+ZoVzwXsqMqhLPtRcFFIxabhBp6+ZoVzwXsqMqhfM0K54L2VGVQln2ouCikYtNwg09fM0K54L2VGVQvmaFc8F7KjKoSz7UXBRSMWm4QaevmaFc8F7KjKoXzNCueC9lRlUJZ9qLgopGLTcINPXzNCueC9lRlUL5mhXPBeyoyqEs+1FwUUjFpuENNPXzNCueC9lRlUL5mhXPBeyoyqEs+1FwUUjFpGGlTCdNWmoz11mNn3n6b5espPUwWTgLINfQkZZOJiHDz4LxPHdreqUlvA1LGs4WNZ8ms4TxLoLEY34atxVtQUTnX+trBT3qDy9ktmHYRYlhFzJ/tmz/AKeoDy7oLEY34atwugsRjfhq3HElE7NrBSTX+SvEu/Wz7nqA8u6CxGN+GrcLoLEY34atwkonZtYKK/yV4l362fc9QHl3QWIxvw1bhdBYjG/DVuElE7NrBRX+SvEu/Wz7nqA8u6CxGN+GrcLoLEY34atwkonZtYKK/wAleJd+tn3PUB5d0FiMb8NW4XQWIxvw1bhJROzawUV/krxLv1s+56gPLugsRjfhq3C6CxGN+GrcJKJ2bWCiv8leJd+tn3PUJjWpeCdn573yoIS3QWIxvw1biaVp7GQ8dRD8aFecdDLIvktbxWs+fFR/syOoZ87a0m2FRL0U1PpllWBisn6Dh8y21pJ/CNIq/WxTcoAJR5WY/SVg5mbREX6Kiq57ziustRpKwczNoiL9FRVc95xXWXmSOy0QYvrQ4gAtyGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACfFongPVpZ/5HZAcnxaJ4D1aWf+R2V2VO4+5Jhe2b7ABrpYmP0lYOZm0RF+ioque84rrLUaSsHMzaIi/RUVXPecV1l5kjstEGL60OIALchgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAnxaJ4D1aWf+R2QHJ8WieA9Wln/kdldlTuPuSYXtm+wAa6WJ5c32Of2XlOzFiYZTtD+NgX8O7U8a1iWKW7UljWtYxreDhb/ppCxdp9SW1bWss5KPzbjcRUE5wSXEU8cIqMfUxvHTLfWQXvPaTMuSjrcRUC89pMy5KOtxFQToBnrN/cY5Z2QXvPaTMuSjrcRUC89pMy5KOtxFQToArN/cJZ2QXvPaTMuSjrcRUC89pMy5KOtxFQToArN/cJZ2QXvPaTMuSjrcRUC89pMy5KOtxFQToArN/cJZ2QXvPaTMuSjrcRUC89pMy5KOtxFQToArN/cJZ2QXvPaTMuSjrcRUC89pMy5KOtxFQToArN/cJZ2QXvPaTMuSjrcRUC89pMy5KOtxFQToArN/cJZ2QXvPaTMuSjrcRUC89pMy5KOtxFQToArN/cJZ2QXvPaTMuSjrcRUC89pMy5KOtxFQToArN/cJZ2QXvPaTMuSjrcRUC89pMy5KOtxFQToArN/cJZ2QXvPaTMuSjrcRUC89pMy5KOtxFQToArN/cJZ2QXvPaTMuSjrcRUC89pMy5KOtxFQToArN/cJZ2QXvPaTMuSjrcRUC89pMy5KOtxFQToArN/cJZ2QXvPaTMuSjrcRUC89pMy5KOtxFQToArN/cJZ2QXvPaTMuSjrcRUEm7Wuj+zNGtHLZcs7EwETFtjnkRx4J4tbviqShjGcK0pbw/2t/g2aDE+jXr5nRa6juw5ZYXOgABEMp//Z" alt="TH"><span class="brand-name">Tommy Studios</span></div>
+<h1>Crew Availability</h1>
+<p>Find your name. Select your available days. Submit.</p>
+</div>
+<div class="prog"><div><div class="bar on" id="b0"></div><label class="on" id="l0">Your Name</label></div><div><div class="bar" id="b1"></div><label id="l1">Your Days</label></div><div><div class="bar" id="b2"></div><label id="l2">Confirm</label></div></div>
+<div class="bd">
+<div class="step active" id="s0">
+<label class="fl">Search your name</label>
+<input type="text" id="search" placeholder="Start typing..." autofocus>
+<div class="res" id="res"></div>
+<p class="nm-err" id="noM">No matches found. Check your spelling and try again.</p>
+<button class="btn btn-d" id="bn0" disabled onclick="go(1)">Continue</button>
+</div>
+<div class="step" id="s1">
+<div class="sb"><div><span class="name" id="sN"></span><span class="tid" id="sT"></span></div><a onclick="go(0)">Change</a></div>
+<div class="mr"><select id="sM" onchange="mc()"></select><select id="sY" onchange="mc()"></select></div>
+<div class="mn">Submit one month at a time. You can come back and submit another month after.</div>
+<div class="qr"><button onclick="allWd()">Select All Weekdays</button><button onclick="clr()">Clear All</button></div>
+<div class="cal"><div class="cal-h"><span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span class="we">SAT</span><span class="we">SUN</span></div><div class="cal-g" id="cG"></div></div>
+<p class="ct">Days selected: <strong id="cN">0</strong></p>
+<div class="ni"><input type="text" id="nI" placeholder="Notes (optional) — e.g. max 3 days, mornings only..."></div>
+<button class="btn btn-d" id="bn1" disabled onclick="go(2)">Review &amp; Submit</button>
+</div>
+<div class="step" id="s2">
+<label class="fl" style="margin-bottom:14px">Confirm your availability</label>
+<div class="cb"><div class="cg"><div><div class="cl">Name</div><div class="cv" id="cNm"></div></div><div><div class="cl">Period</div><div class="cv" id="cPr"></div></div><div><div class="cl">Roles</div><div class="cv2" id="cRl"></div></div><div><div class="cl">ID</div><div class="cv2" id="cId"></div></div></div><div class="chips" id="cDs"></div><p class="cn" id="cNt" style="display:none"></p></div>
+<div class="btn-row"><button class="btn btn-o" onclick="go(1)">Back</button><button class="btn btn-r" id="bSub" onclick="sub()">Submit</button></div>
+<p class="err" id="sErr"></p>
+</div>
+<div class="step" id="s3"><div class="done"><div class="dc">&#10003;</div><h2>Availability Submitted</h2><p id="dM"></p><div class="cb" id="dS" style="text-align:left"></div><button class="btn btn-d" onclick="rst()" style="margin-top:16px">Submit Another Month</button></div></div>
+</div>
+<div class="ftr"><span>Tommy Hilfiger &mdash; Confidential &mdash; For Authorized Use Only</span></div>
+</div>
+<script>
+const WH="YOUR_POWER_AUTOMATE_WEBHOOK_URL_HERE";
+
+const T=[{"i":"T001","n":"ABEL M","r":"Digi/Light/Studio"},{"i":"T002","n":"AIDA MEIJER","r":"BIPOC Hair Specialist"},{"i":"T003","n":"ALEJANDRO BLIJD","r":"BIPOC Hair Specialist"},{"i":"T004","n":"ALEXANDER VAN DER HEIDE","r":"Groomer"},{"i":"T005","n":"AMBAR","r":"Dresser 2 / PSA"},{"i":"T006","n":"AMBER ASTE - VAN STRIEN","r":"Dresser 1, Pre-Styling TH"},{"i":"T007","n":"AMBER VAN OIRSHOT","r":"Dresser 1"},{"i":"T008","n":"ANABELLA ROLDEN","r":"Digi/Light/Studio"},{"i":"T009","n":"ANH NGUYAEN","r":"HMUA"},{"i":"T010","n":"ANITA JOLLES","r":"HMUA"},{"i":"T011","n":"ANN-KATHRIN","r":"OPS"},{"i":"T012","n":"ANNA KLIEMONOVA","r":"HMUA"},{"i":"T013","n":"ANNA MALA","r":"Dresser 1, Stills Stylist"},{"i":"T014","n":"ANOESKA SCHMIDT","r":"BIPOC Hair Specialist"},{"i":"T015","n":"ANOUK NIJS","r":"Mani-Pedicurist"},{"i":"T016","n":"ANOUK OCEANNE","r":"Dresser 1"},{"i":"T017","n":"APRIL WOODWARD SMITH","r":"Photographer, Stills Photographer"},{"i":"T018","n":"ASIMINA TRAKER","r":"Dresser 2 / PSA"},{"i":"T019","n":"BASHKA ANDERSON","r":"Dresser 1"},{"i":"T020","n":"BENJAMIN SAMSODIEN","r":"Digi/Light/Studio"},{"i":"T021","n":"BIANCA KUHLEMAN","r":"Dresser 2 / PSA"},{"i":"T025","n":"BO ANNA","r":"BIPOC Hair Specialist"},{"i":"T026","n":"CARLIJN VAN DEN BOOGARD","r":"HMUA"},{"i":"T027","n":"CARLOS SAIDEL","r":"HMUA"},{"i":"T028","n":"CAROLINA MILLS","r":"Photographer, Digi/Light/Studio"},{"i":"T030","n":"CATERINA GRADI","r":"Digi/Light/Studio"},{"i":"T031","n":"CECILE VAN HERWIJNEN","r":"Dresser 1"},{"i":"T033","n":"CHARLOTTE BEECK","r":"Tailor"},{"i":"T035","n":"CHINEY IKOSA","r":"BIPOC Hair Specialist"},{"i":"T036","n":"CHRISTINE KAT","r":"Groomer"},{"i":"T037","n":"CHRISTINE MARIE","r":"HMUA"},{"i":"T039","n":"CLAIRE ANIN","r":"Digi/Light/Studio"},{"i":"T040","n":"CLAIRE JUGE","r":"Dresser 2 / PSA"},{"i":"T041","n":"CRISTINA PLANELLES","r":"Dresser 1, Stills Stylist"},{"i":"T042","n":"DANA TAVERNE","r":"Mani-Pedicurist"},{"i":"T043","n":"DANI FUERZA","r":"HMUA"},{"i":"T044","n":"DANIEL","r":"Mani-Pedicurist"},{"i":"T045","n":"DANIEL LEWENZSTAIN","r":"Digi/Light/Studio"},{"i":"T046","n":"DANIEL MULDER","r":"Photographer"},{"i":"T048","n":"DANIELLE KEMPEN","r":"Dresser 1, Pre-Styling TH"},{"i":"T049","n":"DANIELLE PAUL","r":"Dresser 1"},{"i":"T050","n":"DAVID IN DEN BOSCH","r":"Stills Photographer"},{"i":"T051","n":"DAVID JOOSTEN","r":"Photographer"},{"i":"T052","n":"DENISE","r":"Tailor"},{"i":"T053","n":"DIDO MANI","r":"Dresser 1"},{"i":"T054","n":"DIEK ZEGERS","r":"Tailor"},{"i":"T055","n":"DIMPHY DEN OTTER","r":"Pre-Styling TH"},{"i":"T056","n":"DONATA KUKYUTE","r":"Digi/Light/Studio, Photographer, Stills Photographer"},{"i":"T057","n":"DORIS VANDER MOLEN","r":"Dresser 1, Dresser 2 / PSA"},{"i":"T058","n":"DRAGOS MITROFAN","r":"Stills Photographer"},{"i":"T060","n":"ELISA MICHELLE","r":"Digi/Light/Studio"},{"i":"T061","n":"ELIZAR VEERMAN","r":"Digi/Light/Studio"},{"i":"T062","n":"EMMA DE BOER","r":"HMUA"},{"i":"T063","n":"ESTEFANIA VAN HEERDT","r":"HMUA"},{"i":"T064","n":"ESZTER KISS","r":"Dresser 1, Stills Stylist"},{"i":"T065","n":"EVA PRAYCE","r":"Digi/Light/Studio"},{"i":"T066","n":"EVA WEGMAN","r":"Tailor"},{"i":"T067","n":"FAOU BIERA","r":"Dresser 1"},{"i":"T069","n":"GABRIELLE OOSTERLING","r":"BIPOC Hair Specialist"},{"i":"T070","n":"GIEDRE MALINAUSKAITE","r":"Pre-Styling TH"},{"i":"T071","n":"GIGI POT","r":"Dresser 1"},{"i":"T073","n":"HAKAN KEPPLER","r":"Dresser 1"},{"i":"T074","n":"HASNA EL OUALI","r":"Dresser 2 / PSA"},{"i":"T079","n":"ILJITSJ OPPATJA","r":"HMUA, Mani-Pedicurist"},{"i":"T080","n":"ILSE VAN WANDEREM","r":"Dresser 2 / PSA"},{"i":"T081","n":"IMKE VAN DER HEIJDEN","r":"HMUA"},{"i":"T082","n":"INES ARCONADA VAZQUEZ","r":"Tailor"},{"i":"T083","n":"INGRID BLANKENDAAL","r":"Tailor"},{"i":"T084","n":"INGRID VAN HEMERT","r":"HMUA"},{"i":"T085","n":"INIGO VIU HUGUET","r":"Digi/Light/Studio"},{"i":"T087","n":"IRA HUTTER","r":"HMUA"},{"i":"T088","n":"IRINA VOLGAREVA","r":"Dresser 2 / PSA"},{"i":"T089","n":"ISAA GEERATZ","r":"Dresser 1, Dresser 2 / PSA"},{"i":"T091","n":"ISABELLE SARAH KRAMER","r":"Pre-Styling TH"},{"i":"T092","n":"ISHIJAH THOMPSON","r":"Dresser 1"},{"i":"T093","n":"JAMIE KOETZIER","r":"Digi/Light/Studio"},{"i":"T095","n":"JAY RUSSELL","r":"Photographer"},{"i":"T097","n":"JERMAINE","r":"Dresser 2 / PSA"},{"i":"T099","n":"JESSICA SCHOLTEN","r":"Mani-Pedicurist"},{"i":"T101","n":"JIP BOXSTART","r":"Dresser 1"},{"i":"T103","n":"JODY CUBERLI","r":"HMUA"},{"i":"T105","n":"JOYCE DEN OUDEN","r":"Dresser 2 / PSA"},{"i":"T106","n":"JOZEF WRIGHT","r":"Dresser 1, Photographer"},{"i":"T107","n":"JUAN CHAO","r":"Stills Photographer"},{"i":"T108","n":"JULIA OLIJKAN","r":"Dresser 2 / PSA"},{"i":"T109","n":"JULIETA PIACENZA","r":"Dresser 1"},{"i":"T110","n":"KAJ TER BORGH","r":"Stills Photographer"},{"i":"T112","n":"KATERINA FAMILIARSKAIA","r":"Dresser 1"},{"i":"T113","n":"KATERINA VAN CAMP","r":"Dresser 2 / PSA"},{"i":"T115","n":"KEANNA AISHA","r":"BIPOC Hair Specialist"},{"i":"T117","n":"KRYSTEL ROBINSON","r":"Dresser 1, Dresser 2 / PSA, Stills Stylist"},{"i":"T120","n":"LANA RIESEBOS","r":"Dresser 1"},{"i":"T121","n":"LARA GIANNOTTI","r":"Photographer"},{"i":"T122","n":"LARS BLOKKER","r":"Stills Stylist"},{"i":"T123","n":"LAURA JANSSEN","r":"Dresser 1, Dresser 2 / PSA"},{"i":"T124","n":"LAURA YARD","r":"HMUA"},{"i":"T125","n":"LEANNE VAN NIEKERK","r":"HMUA"},{"i":"T126","n":"LISELOTTE SAARLOOS","r":"HMUA"},{"i":"T127","n":"LOIS VAN DER WILDT","r":"Stills Stylist"},{"i":"T128","n":"LOLA KUIPER","r":"Dresser 2 / PSA"},{"i":"T129","n":"LONNY SPENCE","r":"Photographer"},{"i":"T130","n":"LOPULALAN","r":"Digi/Light/Studio"},{"i":"T131","n":"LORENA MATIC","r":"Stills Stylist"},{"i":"T132","n":"LOTTE DE JAGER","r":"Dresser 2 / PSA"},{"i":"T134","n":"LUCILLE MONTEJAT","r":"Digi/Light/Studio"},{"i":"T135","n":"LUKE VAN WIJK","r":"Digi/Light/Studio"},{"i":"T136","n":"LYUDMYLA SUKHONOS","r":"Tailor"},{"i":"T137","n":"MAAIKE PEEK","r":"Dresser 1"},{"i":"T138","n":"MANGALISA VAN DER HEIDE","r":"Dresser 1, Dresser 2 / PSA"},{"i":"T140","n":"MARICA MATTHIESSEN","r":"Dresser 2 / PSA"},{"i":"T141","n":"MARIELLE KUIN","r":"OPS"},{"i":"T142","n":"MARIJE KOELEWIJN","r":"HMUA"},{"i":"T143","n":"MARIJE SEIJN","r":"Photographer"},{"i":"T145","n":"MARK KISZELY","r":"Photographer"},{"i":"T146","n":"MARLY","r":"HMUA"},{"i":"T147","n":"MARTA SERRANO","r":"Digi/Light/Studio"},{"i":"T149","n":"MATILDE","r":"Dresser 1"},{"i":"T150","n":"MATTEO CASARIN","r":"Digi/Light/Studio, Photographer"},{"i":"T152","n":"MAUD VAN UDEN","r":"Dresser 2 / PSA"},{"i":"T153","n":"MAUREEN CLOESMEIJER","r":"Stills Stylist"},{"i":"T154","n":"MICHEL POST","r":"Digi/Light/Studio"},{"i":"T156","n":"MINOU MEIJERS","r":"HMUA"},{"i":"T157","n":"MIQUEL MOHAMEDJAR","r":"Dresser 1, Pre-Styling TH"},{"i":"T159","n":"MUAZ ABOURCHED","r":"Photographer"},{"i":"T160","n":"NADESH / NADEGE BWATOU KANYEBA","r":"BIPOC Hair Specialist"},{"i":"T161","n":"NADIE VAN GEMERT","r":"Dresser 1"},{"i":"T162","n":"NAIMA BREMER","r":"HMUA"},{"i":"T164","n":"NIKI VOS","r":"Mani-Pedicurist"},{"i":"T165","n":"NIKITA HUNTER","r":"Dresser 2 / PSA"},{"i":"T167","n":"NINA VRIESWIJK","r":"Dresser 2 / PSA"},{"i":"T168","n":"NINO GIMENEZ","r":"Stills Stylist"},{"i":"T170","n":"OLYA ILASCO","r":"Stills Photographer"},{"i":"T171","n":"PATRICIA GIESBERS","r":"Dresser 1, Pre-Styling TH"},{"i":"T173","n":"PERRINE PHILOMEEN","r":"Dresser 2 / PSA"},{"i":"T174","n":"PETER DWARS","r":"Mani-Pedicurist"},{"i":"T176","n":"PHOEBE VOS","r":"Dresser 2 / PSA"},{"i":"T178","n":"PILAR MADIMIN","r":"Dresser 1"},{"i":"T180","n":"RAJAN BENJAMIN","r":"Dresser 2 / PSA"},{"i":"T181","n":"RAYMOND SOLCER","r":"Digi/Light/Studio"},{"i":"T182","n":"RICARDS BRISKA","r":"Digi/Light/Studio"},{"i":"T184","n":"ROGIER CORBEAU","r":"Stills Stylist"},{"i":"T185","n":"ROMEE","r":"HMUA"},{"i":"T186","n":"ROMY BORST","r":"Mani-Pedicurist"},{"i":"T187","n":"ROMY LEGGER","r":"HMUA"},{"i":"T188","n":"ROOS VERBOOM","r":"Dresser 2 / PSA, HMUA"},{"i":"T190","n":"RUDOLFS PAKEVICS","r":"Dresser 1"},{"i":"T191","n":"SADRYONE","r":"BIPOC Hair Specialist"},{"i":"T193","n":"SARAH CLOE","r":"Groomer"},{"i":"T194","n":"SARAIHAIR AMSTERDAM BRAIDS","r":"BIPOC Hair Specialist"},{"i":"T195","n":"SASJA DEUX AMSTERDAM","r":"Tailor"},{"i":"T196","n":"SASKIA VAN DER KLEI","r":"Tailor"},{"i":"T197","n":"SERGIO ESCHE","r":"HMUA"},{"i":"T198","n":"SISLEY ANGENOIS","r":"HMUA"},{"i":"T200","n":"SUZANNE VERBECK","r":"HMUA (Higher Rate)"},{"i":"T203","n":"TANISHA SAPHIRA","r":"Dresser 2 / PSA"},{"i":"T204","n":"TAUFIQ HOSEN","r":"Photographer, Stills Photographer"},{"i":"T205","n":"TEREZA SIKOROVA","r":"Dresser 2 / PSA"},{"i":"T206","n":"TESS VAN ROOIJEN","r":"Dresser 1"},{"i":"T207","n":"TESSA RUGER","r":"Digi/Light/Studio"},{"i":"T208","n":"THERA HILLENAAR","r":"Tailor"},{"i":"T209","n":"THOMAS LORENZ","r":"HMUA"},{"i":"T210","n":"TRISTEN HAUMAHU","r":"Digi/Light/Studio, Photographer"},{"i":"T211","n":"ULIANA MILODYAN","r":"Dresser 2 / PSA"},{"i":"T212","n":"VERA DIRKX","r":"Mani-Pedicurist"},{"i":"T213","n":"VINCENT MERINO","r":"Photographer"},{"i":"T214","n":"VITA STASIUKYNAITE","r":"Dresser 1, Tailor"},{"i":"T215","n":"WILLEM TJALMA","r":"Dresser 2 / PSA"},{"i":"T216","n":"YARA FOSTER","r":"BIPOC Hair Specialist"},{"i":"T217","n":"YASMIN ARION","r":"BIPOC Hair Specialist"},{"i":"T218","n":"YOANA TABAKOVA","r":"Digi/Light/Studio, Dresser 2 / PSA"},{"i":"T219","n":"YUTA SAWAMURA","r":"Digi/Light/Studio"},{"i":"T220","n":"YVANA","r":"Dresser 1"},{"i":"T221","n":"ZAIRA AICHA","r":"Dresser 2 / PSA"},{"i":"T222","n":"ZBIGNIEW","r":"Digi/Light/Studio"}];
+const MO=["January","February","March","April","May","June","July","August","September","October","November","December"];
+const DN=["MON","TUE","WED","THU","FRI","SAT","SUN"];
+let sel=null,days=new Set();
+const $=id=>document.getElementById(id);
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+function fz(q,t){const a=q.toLowerCase().replace(/[^a-z0-9]/g,""),b=t.toLowerCase().replace(/[^a-z0-9]/g,"");if(b.includes(a))return 2;let i=0;for(let j=0;j<b.length&&i<a.length;j++)if(b[j]===a[i])i++;return i===a.length?1:0}
+$("search").addEventListener("input",function(){const q=this.value.trim();sel=null;$("bn0").disabled=true;if(q.length<1){$("res").innerHTML="";$("noM").classList.remove("show");return}const m=T.map(t=>({...t,s:Math.max(fz(q,t.n),fz(q,t.r))})).filter(t=>t.s>0).sort((a,b)=>b.s-a.s||a.n.localeCompare(b.n)).slice(0,10);if(!m.length){$("res").innerHTML="";$("noM").classList.add("show");return}$("noM").classList.remove("show");$("res").innerHTML=m.map(t=>'<button onclick="pk(\''+t.i+'\')" id="o_'+t.i+'"><div class="nm">'+esc(t.n)+'</div><div class="rl">'+t.i+' \u2014 '+esc(t.r)+'</div></button>').join("")});
+function pk(id){sel=T.find(t=>t.i===id);$("search").value=sel.n;$("res").querySelectorAll("button").forEach(b=>b.classList.remove("sel"));const e=$("o_"+id);if(e)e.classList.add("sel");$("bn0").disabled=false}
+const sm=$("sM"),sy=$("sY");MO.forEach((m,i)=>{const o=document.createElement("option");o.value=i;o.textContent=m;sm.appendChild(o)});[2025,2026,2027].forEach(y=>{const o=document.createElement("option");o.value=y;o.textContent=y;sy.appendChild(o)});sm.value=new Date().getMonth();sy.value=2026;
+function mc(){days=new Set();rc()}
+function dim(y,m){return new Date(y,m+1,0).getDate()}
+function fd(y,m){const d=new Date(y,m,1).getDay();return d===0?6:d-1}
+function iw(y,m,d){const w=new Date(y,m,d).getDay();return w===0||w===6}
+function allWd(){const y=+sy.value,m=+sm.value,n=dim(y,m);days=new Set();for(let d=1;d<=n;d++)if(!iw(y,m,d))days.add(d);rc()}
+function clr(){days=new Set();rc()}
+function tg(d){days.has(d)?days.delete(d):days.add(d);rc()}
+function rc(){const y=+sy.value,m=+sm.value,n=dim(y,m),f=fd(y,m);let h="";for(let i=0;i<f;i++)h+='<button class="empty" disabled></button>';for(let d=1;d<=n;d++){const w=iw(y,m,d),o=days.has(d);h+=w?'<button class="we" disabled>'+d+"</button>":'<button class="'+(o?"on":"")+'" onclick="tg('+d+')">'+d+"</button>"}$("cG").innerHTML=h;$("cN").textContent=days.size;$("bn1").disabled=days.size===0}
+function go(s){document.querySelectorAll(".step").forEach((e,i)=>e.classList.toggle("active",i===s));for(let i=0;i<3;i++){$("b"+i).classList.toggle("on",i<=s);$("l"+i).classList.toggle("on",i<=s)}if(s===1&&sel){$("sN").textContent=sel.n;$("sT").textContent=sel.i;days=new Set();rc()}if(s===2)bc()}
+function bc(){$("cNm").textContent=sel.n;$("cId").textContent=sel.i;$("cRl").textContent=sel.r;$("cPr").textContent=MO[+sm.value]+" "+sy.value;const sr=[...days].sort((a,b)=>a-b),y=+sy.value,m=+sm.value;$("cDs").innerHTML=sr.map(d=>{const dt=new Date(y,m,d);return"<span>"+DN[(dt.getDay()+6)%7]+" "+d+"</span>"}).join("");const n=$("nI").value,cn=$("cNt");if(n){cn.textContent="Note: "+n;cn.style.display="block"}else cn.style.display="none"}
+async function sub(){const b=$("bSub"),e=$("sErr");b.disabled=true;b.textContent="SENDING...";e.classList.remove("show");const sr=[...days].sort((a,b)=>a-b);const p={talentId:sel.i,talentName:sel.n,roles:sel.r,month:MO[+sm.value],year:sy.value,sheetName:MO[+sm.value]+" "+sy.value,inputMode:"available",dayNumbers:sr.join(","),notes:$("nI").value,timestamp:new Date().toISOString()};try{if(WH==="YOUR_POWER_AUTOMATE_WEBHOOK_URL_HERE"){console.log("DEMO:",JSON.stringify(p,null,2));await new Promise(r=>setTimeout(r,600))}else{const r=await fetch(WH,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p)});if(!r.ok)throw new Error("Server "+r.status)}go(3);$("dM").textContent="Thank you, "+sel.n+"!";$("dS").innerHTML='<div class="cl">Days available</div><div style="font-weight:700;margin-top:4px">'+p.month+" "+p.year+'</div><div class="days-list">'+p.dayNumbers+"</div>"+(p.notes?'<div style="font-size:11px;color:#888;margin-top:6px;font-style:italic">'+esc(p.notes)+"</div>":"")}catch(x){e.textContent="Failed to submit. Try again. ("+x.message+")";e.classList.add("show");b.disabled=false;b.textContent="SUBMIT"}}
+function rst(){sel=null;days=new Set();$("search").value="";$("res").innerHTML="";$("nI").value="";$("bn0").disabled=true;$("bSub").disabled=false;$("bSub").textContent="SUBMIT";$("sErr").classList.remove("show");go(0);$("search").focus()}
+rc();
+</script>
+</body>
+</html>
